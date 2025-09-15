@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Apply for {{ job.title }}</h4>
+                <small class="text-muted">{{ job.company }} • {{ job.location }}</small>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        <label class="form-label">Your Information</label>
+                        <div class="card bg-light mb-3">
+                            <div class="card-body">
+                                <p class="mb-1"><strong>Name:</strong> {{ current_user.username }}</p>
+                                <p class="mb-0"><strong>Email:</strong> {{ current_user.email }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.cover_letter.label(class="form-label") }}
+                        {{ form.cover_letter(class="form-control", rows=10) }}
+                        {% if form.cover_letter.errors %}
+                        <div class="invalid-feedback">
+                            {% for error in form.cover_letter.errors %}
+                            <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <small class="text-muted">Explain why you're a good fit for this position</small>
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

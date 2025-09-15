@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h2><i class="fas fa-server"></i> 500 Server Error</h2>
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Internal Server Error</h4>
+            <p class="card-text">
+                The server encountered an internal error and was unable to complete your request.
+                <br>
+                Our team has been notified and we're working to fix the issue.
+            </p>
+            <div class="mt-4">
+                <a href="{{ url_for('main.home') }}" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Return Home
+                </a>
+                <button onclick="window.location.reload()" class="btn btn-warning ms-2">
+                    <i class="fas fa-sync-alt"></i> Try Again
+                </button>
+                <a href="mailto:support@jobportal.com" class="btn btn-info ms-2">
+                    <i class="fas fa-envelope"></i> Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

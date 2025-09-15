@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card border-warning">
+        <div class="card-header bg-warning text-dark">
+            <h2><i class="fas fa-exclamation-triangle"></i> 404 Not Found</h2>
+        </div>
+        <div class="card-body">
+            <h4 class="card-title">Page Not Found</h4>
+            <p class="card-text">
+                The requested URL was not found on this server.
+                <br>
+                You may have typed the address incorrectly or the page may have moved.
+            </p>
+            <div class="mt-4">
+                <a href="{{ url_for('main.home') }}" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Return Home
+                </a>
+                <a href="{{ url_for('jobs.job_list') }}" class="btn btn-success ms-2">
+                    <i class="fas fa-briefcase"></i> Browse Jobs
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

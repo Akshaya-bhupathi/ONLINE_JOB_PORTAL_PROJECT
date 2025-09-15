@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Job Seeker Dashboard</h1>
+
+<h3 class="mb-3">Your Applications</h3>
+{% if applications %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Applied On</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for application in applications %}
+            <tr>
+                <td>{{ application.job.title }}</td>
+                <td>{{ application.job.company }}</td>
+                <td>{{ application.date_applied.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <span class="badge bg-{{ 'success' if application.status == 'Accepted' else 'danger' if application.status == 'Rejected' else 'warning' }}">
+                        {{ application.status }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ url_for('jobs.job_detail', job_id=application.job.id) }}" class="btn btn-sm btn-info">View Job</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    You haven't applied to any jobs yet. <a href="{{ url_for('jobs.job_list') }}">Browse available jobs</a>.
+</div>
+{% endif %}
+
+<h3 class="mb-3 mt-5">Recommended Jobs</h3>
+<div class="row">
+    {% for job in recommended_jobs %}
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ job.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ job.company }} • {{ job.location }}</h6>
+                <p class="card-text">{{ job.description[:100] }}...</p>
+                <a href="{{ url_for('jobs.job_detail', job_id=job.id) }}" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        No recommended jobs at the moment. <a href="{{ url_for('jobs.job_list') }}">Browse all jobs</a>.
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

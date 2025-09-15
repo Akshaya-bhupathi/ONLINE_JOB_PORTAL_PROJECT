@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="job-detail">
+    <h1>{{ job.title }}</h1>
+    <h4 class="text-muted">{{ job.company }} • {{ job.location }} • {{ job.salary }}</h4>
+    <hr>
+    <div class="mb-4">
+        <h3>Job Description</h3>
+        {# Escape description unless you explicitly allow HTML input #}
+        <p>{{ job.description }}</p>
+    </div>
+    <div class="d-flex justify-content-between">
+        <small class="text-muted">
+            Posted on {{ job.date_posted.strftime('%Y-%m-%d') }}
+            {% if job.applications %}
+                • {{ job.applications|length }} applicants
+            {% endif %}
+        </small>
+
+        {% if current_user.is_authenticated %}
+            {% if current_user.role == 'jobseeker' %}
+                {% if not current_user.has_applied(job) %}
+                    <form action="{{ url_for('jobs.apply_job', job_id=job.id) }}" method="POST">
+                        <button type="submit" class="btn btn-primary">Apply Now</button>
+                    </form>
+                {% else %}
+                    <button class="btn btn-success" disabled>Already Applied</button>
+                {% endif %}
+            {% elif current_user.id == job.user_id %}
+                <div>
+                    <a href="{{ url_for('jobs.edit_job', job_id=job.id) }}" class="btn btn-secondary">Edit</a>
+                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+                </div>
+            {% endif %}
+        {% else %}
+            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Login to Apply</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Job?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this job posting?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <form action="{{ url_for('jobs.delete_job', job_id=job.id) }}" method="POST">
+                    {{ csrf_token() }}
+                    <input type="submit" class="btn btn-danger" value="Delete">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

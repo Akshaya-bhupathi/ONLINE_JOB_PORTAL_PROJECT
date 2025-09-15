@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Employer Dashboard</h1>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <a href="{{ url_for('jobs.post_job') }}" class="btn btn-primary">Post New Job</a>
+    </div>
+</div>
+
+<h3 class="mb-3">Your Job Postings</h3>
+{% if jobs %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Applications</th>
+                <th>Posted</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job.title }}</td>
+                <td>{{ job.applications|length }}</td>
+                <td>{{ job.date_posted.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <a href="{{ url_for('jobs.job_detail', job_id=job.id) }}" class="btn btn-sm btn-info">View</a>
+                    <a href="{{ url_for('jobs.edit_job', job_id=job.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    You haven't posted any jobs yet. <a href="{{ url_for('jobs.post_job') }}">Post your first job</a>.
+</div>
+{% endif %}
+
+<h3 class="mb-3 mt-5">Recent Applications</h3>
+{% if applications %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Applicant</th>
+                <th>Applied On</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for application in applications[-5:]|reverse %}
+            <tr>
+                <td>{{ application.job.title }}</td>
+                <td>{{ application.applicant.username }}</td>
+                <td>{{ application.date_applied.strftime('%Y-%m-%d') }}</td>
+                <td>
+                    <span class="badge bg-{{ 'success' if application.status == 'Accepted' else 'danger' if application.status == 'Rejected' else 'warning' }}">
+                        {{ application.status }}
+                    </span>
+                </td>
+                <td>
+                    <a href="#" class="btn btn-sm btn-info">View</a>
+                    <a href="#" class="btn btn-sm btn-success">Accept</a>
+                    <a href="#" class="btn btn-sm btn-danger">Reject</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    No applications received yet.
+</div>
+{% endif %}
+{% endblock %}
